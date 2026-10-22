@@ -1,7 +1,7 @@
 ---
 name: vitest
 kind: framework
-coverage: [5]
+coverage: [4, 5]
 ---
 # Vitest standards
 
@@ -17,3 +17,15 @@ coverage: [5]
 - Use `concurrent: false`, not the removed `test.sequential`/`describe.sequential`. `toThrow('')` matches any message; use `/^$/` for empty. Source: migration guide
 - Use `test.projects` for multiple environments; inline projects inherit root config by default. Source: https://vitest.dev/blog/vitest-5
 - Reporter output goes under `.vitest/`; gitignore it. Source: migration guide
+
+## Backward: v4 (researched 2026-10-22; for repos on Vitest 4.x, from the v4 and v5 migration guides)
+These replace the matching Base rules for a repo that has not moved to v5.
+- Vitest 4 needs Vite >= 6.0 and Node >= 20. The Vite >= 6.4 / Node >= 22.12 floors and the explicit `vite` peer install are v5-only. Source: https://v4.vitest.dev/guide/migration
+- `clearMocks` defaults to `false`: mock call history carries from one test into the next. Set `clearMocks: true` (or `mockReset`/`restoreMocks`) in config, or call `vi.clearAllMocks()` in `beforeEach`. Still reset stubs and timers (`vi.unstubAllGlobals()`, `vi.unstubAllEnvs()`, `vi.useRealTimers()`). Source: https://vitest.dev/guide/migration (v5 section)
+- `vi.mock`/`vi.unmock`/`vi.hoisted` inside a function or `describe`/`test` callback only logs a warning in v4 (v5 throws). Keep them at the top level anyway. Source: same
+- `test.sequential`, `describe.sequential` and the `sequential` option still exist in v4; `concurrent: false` also works and is the forward-compatible form. Source: same
+- `toThrow('')` matches only an empty message (treated as `/^$/`); in v5 it matches anything. Source: same
+- Inline `test.projects` entries do NOT inherit the root config by default; set `extends: true` on each. Source: same
+- Class mocks: in v4 the mock's prototype is not chained to the implementation, so `instanceof` and prototype methods can fail with `vi.fn(Dog)`. Use a factory or `vi.fn(class ...)` and verify. Mocks called with `new` construct an instance. Source: https://v4.vitest.dev/guide/migration
+- `bench` is still a top-level import in v4 (the context-fixture API is v5). Source: https://vitest.dev/guide/migration
+- Not verified for v4: unawaited `.resolves`/`.rejects`, config search in parent directories, the `.vitest/` reporter output directory. Keep the Base advice (await, root config, gitignore) as a safe superset.

@@ -1,7 +1,7 @@
 ---
 name: sveltekit
 kind: framework
-coverage: [3]
+coverage: [2, 3]
 ---
 # SvelteKit standards
 
@@ -23,3 +23,14 @@ coverage: [3]
 
 ### Svelte 5 components
 - See `svelte.md` (moved there 2026-10-22 so non-Kit projects can use it).
+
+## Backward: v2 (researched 2026-10-22; for repos on SvelteKit 2.x, from the installed @sveltejs/kit 2.70 types and source)
+These replace the matching Base rules for a repo that has not moved to v3. Items marked UNVERIFIED need a check against the v3 migration guide.
+- Inline config: from kit 2.62 `sveltekit({...})` in `vite.config` accepts config directly (top-level, no `kit: {}`), and `svelte.config.js` is then ignored. Below 2.62, or with no inline config, `svelte.config.js` is still used. Floors on 2.70: Node >= 18.13, TypeScript ^5.3.3 || ^6, Vite 5 to 8, Svelte 4 or 5. The v3 floors (Node 22.17, Svelte 5.57.1, vite-plugin-svelte 7) do not apply. Source: https://svelte.dev/docs/kit/migrating-to-sveltekit-3
+- Keep `$lib` (default `src/lib`, extensionless imports). `#lib/*` subpath imports are v3-only. Source: https://svelte.dev/docs/kit/$lib
+- `tsconfig.json` extends `./.svelte-kit/tsconfig.json`; `$app/tsconfig` does not exist in v2. Source: https://svelte.dev/docs/kit/configuration#typescript
+- Use `$app/state` (since 2.12, needs Svelte 5); `$app/stores` is deprecated but present. `$app/env`, `asset()`/`resolve()` from `$app/paths` and `refreshAll` already exist in 2.70, so the v3 forms are usable; `base`/`assets`/`resolveRoute` are deprecated. Source: https://svelte.dev/docs/kit/migrating-to-sveltekit-2
+- Shallow routing uses `pushState`/`replaceState`; `goto(url, { shallow: true })` is v3-only. `invalidateAll` is the v2 API (`refreshAll` also works). Source: https://svelte.dev/docs/kit/shallow-routing
+- Use `isHttpError`/`isRedirect` (present in 2.70). `json()`/`text()` from the kit are not deprecated in v2; `Response.json()` is the forward-compatible form. Source: https://svelte.dev/docs/kit/@sveltejs-kit
+- Server-only modules in v2 are `*.server.*` files and `$lib/server/`; the v3 "any `server` path segment" rule does not apply. UNVERIFIED. Source: https://svelte.dev/docs/kit/server-only-modules
+- Static SPA rules (adapter-static `fallback`, `ssr = false` in the root layout, no server files) and the experimental status of remote functions are identical in v2. Source: https://svelte.dev/docs/kit/single-page-apps
