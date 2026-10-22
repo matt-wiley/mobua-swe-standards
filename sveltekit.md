@@ -3,7 +3,7 @@ name: sveltekit
 kind: framework
 coverage: [3]
 ---
-# SvelteKit (and Svelte 5) standards
+# SvelteKit standards
 
 ## Base (researched at SvelteKit 3.1 / Svelte 5.57, 2026-10-16)
 
@@ -22,10 +22,4 @@ coverage: [3]
 - Remote functions are still experimental. Don't use them in a static SPA. Source: https://svelte.dev/docs/kit/migrating-to-sveltekit-3
 
 ### Svelte 5 components
-- Always write new code in runes mode. Avoid the legacy features: `$:`, `export let`, `$$props`/`$$restProps`, `on:` directives, `<slot>`/`$$slots`/`<svelte:fragment>`, `<svelte:component>`, `<svelte:self>`, `use:` actions, the `class:` directive, and stores for shared state. Source: https://svelte.dev/docs/svelte/best-practices
-- Use `$state` only for values that must trigger updates. Use `$state.raw` for large data that is replaced rather than mutated, such as API responses. Source: same.
-- Compute values with `$derived`/`$derived.by` and side-effect-free expressions, not `$effect`. Values that depend on props must be `$derived`. Source: same.
-- `$effect` is an escape hatch. Put user-triggered logic in event handlers, sync with external libraries via `{@attach}`, and use `<svelte:window>`/`<svelte:document>` for global listeners. Source: same.
-- Events are attributes (`onclick={...}`). Use `{#snippet}`/`{@render}` for composition. Source: same.
-- Share state through classes with `$state` fields, scoped with `createContext` instead of module-level state or `setContext`/`getContext`. Source: same.
-- Key each `{#each}` block by a unique id, never the index. Use clsx-style `class` arrays or objects, and `style:--name={value}` for CSS variables. Source: same.
+- See `svelte.md` (moved there 2026-10-22 so non-Kit projects can use it).
